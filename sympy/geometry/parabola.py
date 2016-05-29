@@ -1,4 +1,4 @@
-"""Parabolic geometrical entities.
+"""Parabolic geometrical entity.
 
 Contains
 * Parabola
@@ -34,28 +34,78 @@ import random
 class Parabola(GeometrySet):
     """A parabolic GeometryEntity.
 
+    A parabola is declared with a point, that is called 'focus', and
+    a line, that is called 'directrix'.
+
     Parameters
     ==========
 
-
+    focus : Point
+        Default value is Point(0, 0)
+    p1 : Point, optional
+    p2 : Point, optional
+    slope : sympy expression, optional
+        Two of `p1`, `p2` and `slope` must be supplied to
+        find directrix's equation.
 
     Attributes
     ==========
 
+    focus
+    directrix
+    axis of symmetry
+    vertex
+    focal length
 
     Raises
     ======
-
-
-
-
-    Examples
-    ========
-
-
-
-    Plotting:
-
-
+    TypeError
+        When `focus` is not a Point.
     """
 
+    def __new__(
+        cls, focus=None, p1=None, p2=None, slope=None,
+            **kwargs):
+        slope = sympify(slope)
+
+        if focus is None:
+            focus = Point(0, 0)
+        else:
+            focus = Point(focus)
+
+        if len(focus) != 2:
+            raise ValueError('The focus of "{0}" must be a two dimensional point'.format(cls))
+
+        if len(list(filter(None, (p1, p2, slope)))) != 2:
+            raise ValueError('Exactly two arguments of "p1", '
+                '"p2", and "slope" must not be None."')
+
+        if slope is not None:
+            if p1 is None:
+                directrix = Line(p2, slope=slope)
+            elif p2 is None:
+                directrix = Line(p1, slope=slope)
+        else:
+            directrix = Line(p1, p2)
+
+        return GeometryEntity.__new__(cls, center, directrix, **kwargs)
+
+    @property
+    def ambient_dimension(self):
+        return 2
+
+    @property
+    def focus(self):
+        """The focus of the parabola.
+
+        Returns
+        =======
+
+        focus : number
+
+        See Also
+        ========
+
+        sympy.geometry.point.Point
+        """
+        return self.args[0]
