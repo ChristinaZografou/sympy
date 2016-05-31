@@ -110,21 +110,3 @@ class Parabola(GeometrySet):
         
         """       
         return self.args[1]
-
-    @property
-    def axis_of_symmetry(self):
-        """The directrix of the parabola.
-
-        Returns
-        =======
-
-        directrix : line
-
-        See Also
-        ========
-
-        sympy.geometry.line.Line
-        
-        """
-        
-        return 
