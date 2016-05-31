@@ -48,6 +48,7 @@ ordering_of_classes = [
     "Circle",
     "Ellipse",
     "Curve"
+    "Parabola"
 ]
 
 

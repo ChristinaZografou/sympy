@@ -23,10 +23,10 @@ from sympy.utilities.iterables import uniq
 from sympy.utilities.misc import filldedent
 from sympy.utilities.decorator import doctest_depends_on
 
-from .entity import GeometryEntity, GeometrySet
-from .point import Point
-from .line import Line, LinearEntity
-from .util import _symbol, idiff
+from sympy.geometry.entity import GeometryEntity, GeometrySet
+from sympy.geometry.point import Point
+from sympy.geometry.line import Line, LinearEntity
+from sympy.geometry.util import _symbol, idiff
 
 import random
 
@@ -56,6 +56,7 @@ class Parabola(GeometrySet):
     axis of symmetry
     vertex
     focal length
+    eccentricity
 
     Raises
     ======
@@ -88,7 +89,7 @@ class Parabola(GeometrySet):
         else:
             directrix = Line(p1, p2)
 
-        return GeometryEntity.__new__(cls, center, directrix, **kwargs)
+        return GeometryEntity.__new__(cls, focus, directrix, **kwargs)
 
     @property
     def ambient_dimension(self):
@@ -107,5 +108,30 @@ class Parabola(GeometrySet):
         ========
 
         sympy.geometry.point.Point
+        
         """
         return self.args[0]
+
+    @property
+    def directrix(self):
+        """The directrix of the parabola.
+
+        Returns
+        =======
+
+        directrix : line
+
+        See Also
+        ========
+
+        sympy.geometry.line.Line
+        
+        """
+        if self.args[3] is not None:
+            if self.args[1] is None:
+                direc = Line(self.args[2], self.args[3])
+            elif self.args[2] is None:
+                direc = Line(self.args[1], self.args[3])
+        else:
+            direc = Line(self.args[1], self.args[2])        
+        return direc
