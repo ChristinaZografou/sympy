@@ -130,8 +130,12 @@ class Parabola(GeometrySet):
         if self.args[3] is not None:
             if self.args[1] is None:
                 direc = Line(self.args[2], self.args[3])
+                direc_equation = direc.equation()
             elif self.args[2] is None:
                 direc = Line(self.args[1], self.args[3])
+                direc_equation = direc.equation()
+                
         else:
-            direc = Line(self.args[1], self.args[2])        
-        return direc
+            direc = Line(self.args[1], self.args[2])
+            direc_equation = direc.equation()
+        return direc_equation
