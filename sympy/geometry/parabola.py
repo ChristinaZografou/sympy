@@ -42,11 +42,7 @@ class Parabola(GeometrySet):
 
     focus : Point
         Default value is Point(0, 0)
-    p1 : Point, optional
-    p2 : Point, optional
-    slope : sympy expression, optional
-        Two of `p1`, `p2` and `slope` must be supplied to
-        find directrix's equation.
+    directrix : Line
 
     Attributes
     ==========
@@ -64,11 +60,8 @@ class Parabola(GeometrySet):
         When `focus` is not a Point.
     """
 
-    def __new__(
-        cls, focus=None, p1=None, p2=None, slope=None,
-            **kwargs):
-        slope = sympify(slope)
-
+    def __new__(cls, focus=None, directrix=None, **kwargs):
+        
         if focus is None:
             focus = Point(0, 0)
         else:
@@ -77,18 +70,7 @@ class Parabola(GeometrySet):
         if len(focus) != 2:
             raise ValueError('The focus of "{0}" must be a two dimensional point'.format(cls))
 
-        if len(list(filter(None, (p1, p2, slope)))) != 2:
-            raise ValueError('Exactly two arguments of "p1", '
-                '"p2", and "slope" must not be None."')
-
-        if slope is not None:
-            if p1 is None:
-                directrix = Line(p2, slope=slope)
-            elif p2 is None:
-                directrix = Line(p1, slope=slope)
-        else:
-            directrix = Line(p1, p2)
-
+        directrix = Line(directrix) 
         return GeometryEntity.__new__(cls, focus, directrix, **kwargs)
 
     @property
@@ -126,12 +108,23 @@ class Parabola(GeometrySet):
 
         sympy.geometry.line.Line
         
+        """       
+        return self.args[1]
+
+    @property
+    def axis_of_symmetry(self):
+        """The directrix of the parabola.
+
+        Returns
+        =======
+
+        directrix : line
+
+        See Also
+        ========
+
+        sympy.geometry.line.Line
+        
         """
-        if self.args[3] is not None:
-            if self.args[1] is None:
-                direc = Line(self.args[2], self.args[3])
-            elif self.args[2] is None:
-                direc = Line(self.args[1], self.args[3])
-        else:
-            direc = Line(self.args[1], self.args[2])        
-        return direc
+        
+        return 
