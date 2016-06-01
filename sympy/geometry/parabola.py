@@ -88,7 +88,7 @@ class Parabola(GeometrySet):
         Returns
         =======
 
-        focus : number
+        focus : Point
 
         See Also
         ========
@@ -134,3 +134,27 @@ class Parabola(GeometrySet):
         axis_of_symmetry = self.args[1].perpendicular_line(self.args[0])
         
         return axis_of_symmetry
+
+    @property
+    def vertex(self):
+        """The vertex of the parabola.
+
+        Returns
+        =======
+
+        vertex : Point
+
+        See Also
+        ========
+
+        sympy.geometry.point.Point
+        
+        """
+
+        axis = self.axis_of_symmetry
+        distance = self.args[1].distance(self.args[0])
+        if (axis.slope == 0):
+            vertex = Point(distance/2, self.args[0].args[1])
+        else:
+            vertex = Point(self.args[0].args[0], distance/2)
+        return vertex
