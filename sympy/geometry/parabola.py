@@ -70,7 +70,11 @@ class Parabola(GeometrySet):
         if len(focus) != 2:
             raise ValueError('The focus of "{0}" must be a two dimensional point'.format(cls))
 
-        directrix = Line(directrix) 
+        directrix = Line(directrix)
+
+        if (directrix.slope != 0 and directrix.slope != S.Infinity):
+            raise ValueError('The directrix must be a horizontal or vertical line'.format(cls))
+            
         return GeometryEntity.__new__(cls, focus, directrix, **kwargs)
 
     @property
@@ -101,12 +105,32 @@ class Parabola(GeometrySet):
         Returns
         =======
 
-        directrix : line
+        directrix : Line
 
         See Also
         ========
 
         sympy.geometry.line.Line
         
-        """       
+        """
         return self.args[1]
+
+    @property
+    def axis_of_symmetry(self):
+        """The axis of symmetry of the parabola.
+
+        Returns
+        =======
+
+        axis_of_symmetry : Line
+
+        See Also
+        ========
+
+        sympy.geometry.line.Line
+        
+        """
+
+        axis_of_symmetry = self.args[1].perpendicular_line(self.args[0])
+        
+        return axis_of_symmetry
