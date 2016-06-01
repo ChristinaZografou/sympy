@@ -152,11 +152,22 @@ class Parabola(GeometrySet):
         """
 
         axis = self.axis_of_symmetry
-        distance = self.args[1].distance(self.args[0])
+        focus = self.args[0]
+        directrix = self.args[1]
+        distance = directrix.distance(focus)
         if (axis.slope == 0):
-            vertex = Point(distance/2, self.args[0].args[1])
+            x = -(directrix.coefficients[2])
+            if (x < focus.args[0]):
+                vertex = Point(x + (distance/2), focus.args[1])
+            else:
+                vertex = Point(x - (distance/2), focus.args[1])
         else:
-            vertex = Point(self.args[0].args[0], distance/2)
+            y = -(directrix.coefficients[2])
+            if (y > focus.args[1]):
+                vertex = Point(focus.args[0], y - (distance/2))
+            else:
+                vertex = Point(focus.args[0], y + (distance/2))
+                
         return vertex
 
     @property
