@@ -158,3 +158,24 @@ class Parabola(GeometrySet):
         else:
             vertex = Point(self.args[0].args[0], distance/2)
         return vertex
+
+    @property
+    def focal_length(self):
+        """The focal length of the parabola.
+
+        Returns
+        =======
+
+        focal_lenght : number or symbolic expression
+
+        See Also
+        ========
+
+        sympy.geometry.point.Point
+        
+        """
+
+        return self.args[0].distance(self.vertex)
+        
+        
+        
