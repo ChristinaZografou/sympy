@@ -58,6 +58,20 @@ class Parabola(GeometrySet):
     ======
     TypeError
         When `focus` is not a Point.
+    ValueError
+        When `focus` is not a two dimensional point.
+        When `directrix` is neither horizontal nor vertical.
+
+    Examples
+    ========
+
+    >>> from sympy import Parabola, Point, Line
+    >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7,8)))
+    >>> p1.focus
+    Point2D(0, 0)
+    >>> p1.directrix
+    Line(Point2D(5, 8), Point2D(7, 8))
+    
     """
 
     def __new__(cls, focus=None, directrix=None, **kwargs):
@@ -94,6 +108,15 @@ class Parabola(GeometrySet):
         ========
 
         sympy.geometry.point.Point
+
+        Examples
+        ========
+
+        >>> from sympy import Parabola, Point, Line
+        >>> f1 = Point(0, 0)
+        >>> p1 = Parabola(f1, Line(Point(5, 8), Point(7, 8)))
+        >>> p1.focus
+        Point2D(0, 0)
         
         """
         return self.args[0]
@@ -112,6 +135,15 @@ class Parabola(GeometrySet):
 
         sympy.geometry.line.Line
         
+        Examples
+        ========
+
+        >>> from sympy import Parabola, Point, Line
+        >>> l1 = Line(Point(5, 8), Point(6, 8))
+        >>> p1 = Parabola(Point(0, 0), l1)
+        >>> p1.directrix
+        Line(Point2D(5, 8), Point2D(7, 8))
+        
         """
         return self.args[1]
 
@@ -128,6 +160,14 @@ class Parabola(GeometrySet):
         ========
 
         sympy.geometry.line.Line
+
+        Examples
+        ========
+
+        >>> from sympy import Parabola, Point, Line
+        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
+        >>> p1.axis_of_symmetry
+        Line(Point2D(0, 0), Point2D(0, 8))
         
         """
 
@@ -148,6 +188,14 @@ class Parabola(GeometrySet):
         ========
 
         sympy.geometry.point.Point
+
+        Examples
+        ========
+
+        >>> from sympy import Parabola, Point, Line
+        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
+        >>> p1.vertex
+        Point2D(0, 4)       
         
         """
 
@@ -178,6 +226,15 @@ class Parabola(GeometrySet):
         =======
 
         focal_lenght : number or symbolic expression
+
+
+        Examples
+        ========
+
+        >>> from sympy import Parabola, Point, Line
+        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
+        >>> p1.focal_length
+        4
         
         """
 
@@ -192,6 +249,17 @@ class Parabola(GeometrySet):
 
         eccentricity : number
 
+        Examples
+        ========
+
+        >>> from sympy import Parabola, Point, Line
+        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))        
+        >>> p1.eccentricity
+        1
+
+        Notes
+        -----
+        The eccentricity for every Parabola is 1 by definition.
         
         """       
         return 1
@@ -199,15 +267,24 @@ class Parabola(GeometrySet):
     def equation(self, x='x', y='y'):
         """The equation of the parabola.
 
-         Parameters
+        Parameters
         ==========
         x : str, optional
             Label for the x-axis. Default value is 'x'.
         y : str, optional
             Label for the y-axis. Default value is 'y'.
+            
         Returns
         =======
         equation : sympy expression
+
+        Examples
+        ========
+
+        >>> from sympy import Parabola, Point, Line
+        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))        
+        >>> p1.equation()
+        -x**2 + 16*y - 64      
         
         """
         x = _symbol(x)
@@ -218,9 +295,8 @@ class Parabola(GeometrySet):
         if (axis.slope == 0):
             t1 = 4*(self.focal_length)*(x-self.vertex.x)
             t2 = (y-self.vertex.y)**2
-            return t1 - t2
         else:
             t1 = 4*(self.focal_length)*(y-self.vertex.y)
             t2 = (x-self.vertex.x)**2
-            return t1 - t2
+        return t1 - t2
         
