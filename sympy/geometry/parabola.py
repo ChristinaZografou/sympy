@@ -177,5 +177,16 @@ class Parabola(GeometrySet):
 
         return self.args[0].distance(self.vertex)
         
+    @property
+    def eccentricity(self):
+        """The eccentricity of the parabola.
+
+        Returns
+        =======
+
+        eccentricity : number
+
         
+        """       
+        return 1        
         
