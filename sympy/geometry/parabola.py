@@ -167,11 +167,6 @@ class Parabola(GeometrySet):
         =======
 
         focal_lenght : number or symbolic expression
-
-        See Also
-        ========
-
-        sympy.geometry.point.Point
         
         """
 
@@ -188,5 +183,33 @@ class Parabola(GeometrySet):
 
         
         """       
-        return 1        
+        return 1
+
+    def equation(self, x='x', y='y'):
+        """The equation of the parabola.
+
+         Parameters
+        ==========
+        x : str, optional
+            Label for the x-axis. Default value is 'x'.
+        y : str, optional
+            Label for the y-axis. Default value is 'y'.
+        Returns
+        =======
+        equation : sympy expression
+        
+        """
+        x = _symbol(x)
+        y = _symbol(y)
+        
+        axis = self.axis_of_symmetry
+
+        if (axis.slope == 0):
+            t1 = 4*(self.focal_length)*(x-self.vertex.x)
+            t2 = (y-self.vertex.y)**2
+            return t1 - t2
+        else:
+            t1 = 4*(self.focal_length)*(y-self.vertex.y)
+            t2 = (x-self.vertex.x)**2
+            return t1 - t2
         
