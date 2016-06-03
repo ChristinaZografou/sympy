@@ -36,6 +36,7 @@ class Parabola(GeometrySet):
 
     A parabola is declared with a point, that is called 'focus', and
     a line, that is called 'directrix'.
+    Only vertical or horizontal parabolas are currently supported.
 
     Parameters
     ==========
@@ -50,8 +51,9 @@ class Parabola(GeometrySet):
     focus
     directrix
     axis of symmetry
-    vertex
     focal length
+    p parameter
+    vertex
     eccentricity
 
     Raises
@@ -60,6 +62,7 @@ class Parabola(GeometrySet):
         When `focus` is not a Point.
     ValueError
         When `focus` is not a two dimensional point.
+    NotImplementedError
         When `directrix` is neither horizontal nor vertical.
 
     Examples
@@ -82,12 +85,12 @@ class Parabola(GeometrySet):
             focus = Point(focus)
 
         if len(focus) != 2:
-            raise ValueError('The focus of "{0}" must be a two dimensional point'.format(cls))
+            raise ValueError('The focus must be a two dimensional point'.format(cls))
 
         directrix = Line(directrix)
 
         if (directrix.slope != 0 and directrix.slope != S.Infinity):
-            raise ValueError('The directrix must be a horizontal or vertical line'.format(cls))
+            raise NotImplementedError('The directrix must be a horizontal or vertical line')
             
         return GeometryEntity.__new__(cls, focus, directrix, **kwargs)
 
@@ -170,11 +173,65 @@ class Parabola(GeometrySet):
         Line(Point2D(0, 0), Point2D(0, 8))
         
         """
+        return self.directrix.perpendicular_line(self.focus)
 
-        axis_of_symmetry = self.args[1].perpendicular_line(self.args[0])
+    @property
+    def focal_length(self):
+        """The focal length of the parabola.
+
+        Returns
+        =======
+
+        focal_lenght : number or symbolic expression
+
+
+        Examples
+        ========
+
+        >>> from sympy import Parabola, Point, Line
+        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
+        >>> p1.focal_length
+        4
         
-        return axis_of_symmetry
+        """
+        distance = self.directrix.distance(self.focus)
+        focal_length = distance/2
+        
+        return focal_length
 
+    @property
+    def p_parameter (self):
+        """P is a parameter of parabola.
+
+        Returns
+        =======
+
+        p : number or symbolic expression
+
+        Examples
+        ========
+
+        >>> from sympy import Parabola, Point, Line
+        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))        
+        >>> p1.p_parameter
+        -4 
+        
+        """       
+        if (self.axis_of_symmetry.slope == 0):
+            x = -(self.directrix.coefficients[2])
+            if (x < self.focus.args[0]):
+                p = self.focal_length
+            else:
+                p = -self.focal_length
+        else:
+            y = -(self.directrix.coefficients[2])
+            if (y > self.focus.args[1]):
+                p = -self.focal_length
+            else:
+                p = self.focal_length
+
+        return p
+            
     @property
     def vertex(self):
         """The vertex of the parabola.
@@ -198,47 +255,12 @@ class Parabola(GeometrySet):
         Point2D(0, 4)       
         
         """
-
-        axis = self.axis_of_symmetry
-        focus = self.args[0]
-        directrix = self.args[1]
-        distance = directrix.distance(focus)
-        if (axis.slope == 0):
-            x = -(directrix.coefficients[2])
-            if (x < focus.args[0]):
-                vertex = Point(x + (distance/2), focus.args[1])
-            else:
-                vertex = Point(x - (distance/2), focus.args[1])
+        if (self.axis_of_symmetry.slope == 0):
+            vertex = Point(self.focus.args[0] - self.p_parameter, self.focus.args[1])
         else:
-            y = -(directrix.coefficients[2])
-            if (y > focus.args[1]):
-                vertex = Point(focus.args[0], y - (distance/2))
-            else:
-                vertex = Point(focus.args[0], y + (distance/2))
+            vertex = Point(self.focus.args[0], self.focus.args[1] - self.p_parameter)
                 
         return vertex
-
-    @property
-    def focal_length(self):
-        """The focal length of the parabola.
-
-        Returns
-        =======
-
-        focal_lenght : number or symbolic expression
-
-
-        Examples
-        ========
-
-        >>> from sympy import Parabola, Point, Line
-        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
-        >>> p1.focal_length
-        4
-        
-        """
-
-        return self.args[0].distance(self.vertex)
         
     @property
     def eccentricity(self):
@@ -284,19 +306,17 @@ class Parabola(GeometrySet):
         >>> from sympy import Parabola, Point, Line
         >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))        
         >>> p1.equation()
-        -x**2 + 16*y - 64      
+        -x**2 - 16*y + 64      
         
         """
         x = _symbol(x)
         y = _symbol(y)
-        
-        axis = self.axis_of_symmetry
 
-        if (axis.slope == 0):
-            t1 = 4*(self.focal_length)*(x-self.vertex.x)
-            t2 = (y-self.vertex.y)**2
+        if (self.axis_of_symmetry.slope == 0):
+            t1 = 4 * (self.p_parameter) * (x - self.vertex.x)
+            t2 = (y - self.vertex.y)**2
         else:
-            t1 = 4*(self.focal_length)*(y-self.vertex.y)
-            t2 = (x-self.vertex.x)**2
-        return t1 - t2
+            t1 = 4 * (self.p_parameter) * (y - self.vertex.y)
+            t2 = (x - self.vertex.x)**2
         
+        return t1 - t2
