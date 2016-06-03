@@ -3,8 +3,8 @@ from __future__ import division
 from sympy import Dummy, Rational, S, Symbol, pi, sqrt, oo
 from sympy.core.compatibility import range
 from sympy.geometry import (Circle, Ellipse, GeometryError, Line, Point,
-                            Polygon, Ray, RegularPolygon, Segment,
-                            Triangle, intersection, Parabola)
+                            Point2D, Polygon, Ray, RegularPolygon,
+                            Segment, Triangle, intersection, Parabola)
 from sympy.integrals.integrals import Integral
 from sympy.utilities.pytest import raises, slow
 
@@ -32,15 +32,13 @@ def test_parabola_geom():
     # Basic Stuff
     assert pa1.focus == Point(0, 0)
     assert pa2 == pa3
-    assert pa4 == pa5
-    assert pa8 == pa9
     assert pa4 != pa7
     assert pa6 != pa7
     assert pa6.focus == Point2D(0, 4)
     assert pa6.focal_length == 1
     assert pa6.p_parameter == -1
     assert pa6.vertex == Point2D(0, 5)
-    assert pa6.eccenticity == 1
+    assert pa6.eccentricity == 1
     assert pa7.focus == Point2D(3, 7)
     assert pa7.focal_length == 1/2
     assert pa7.p_parameter == -1/2
@@ -51,3 +49,11 @@ def test_parabola_geom():
     assert pa8.focal_length == 1
     assert pa8.p_parameter == 1
     assert pa8.vertex == Point2D(5, 0)
+    assert pa4.focal_length == pa5.focal_length
+    assert pa4.p_parameter == pa5.p_parameter
+    assert pa4.vertex == pa5.vertex
+    assert pa4.equation() == pa5.equation()
+    assert pa8.focal_length == pa9.focal_length
+    assert pa8.p_parameter == pa9.p_parameter
+    assert pa8.vertex == pa9.vertex
+    assert pa8.equation() == pa9.equation()

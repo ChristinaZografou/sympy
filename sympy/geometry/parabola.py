@@ -144,7 +144,7 @@ class Parabola(GeometrySet):
         ========
 
         >>> from sympy import Parabola, Point, Line
-        >>> l1 = Line(Point(5, 8), Point(6, 8))
+        >>> l1 = Line(Point(5, 8), Point(7, 8))
         >>> p1 = Parabola(Point(0, 0), l1)
         >>> p1.directrix
         Line(Point2D(5, 8), Point2D(7, 8))
