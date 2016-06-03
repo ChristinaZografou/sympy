@@ -74,24 +74,26 @@ class Parabola(GeometrySet):
     Point2D(0, 0)
     >>> p1.directrix
     Line(Point2D(5, 8), Point2D(7, 8))
-    
+
     """
 
     def __new__(cls, focus=None, directrix=None, **kwargs):
-        
+
         if focus is None:
             focus = Point(0, 0)
         else:
             focus = Point(focus)
 
         if len(focus) != 2:
-            raise ValueError('The focus must be a two dimensional point'.format(cls))
+            raise ValueError('The focus must be a two dimensional'
+                             ' point'.format(cls))
 
         directrix = Line(directrix)
 
         if (directrix.slope != 0 and directrix.slope != S.Infinity):
-            raise NotImplementedError('The directrix must be a horizontal or vertical line')
-            
+            raise NotImplementedError('The directrix must be a horizontal'
+                                      ' or vertical line')
+
         return GeometryEntity.__new__(cls, focus, directrix, **kwargs)
 
     @property
@@ -120,7 +122,7 @@ class Parabola(GeometrySet):
         >>> p1 = Parabola(f1, Line(Point(5, 8), Point(7, 8)))
         >>> p1.focus
         Point2D(0, 0)
-        
+
         """
         return self.args[0]
 
@@ -137,7 +139,7 @@ class Parabola(GeometrySet):
         ========
 
         sympy.geometry.line.Line
-        
+
         Examples
         ========
 
@@ -146,7 +148,7 @@ class Parabola(GeometrySet):
         >>> p1 = Parabola(Point(0, 0), l1)
         >>> p1.directrix
         Line(Point2D(5, 8), Point2D(7, 8))
-        
+
         """
         return self.args[1]
 
@@ -171,7 +173,7 @@ class Parabola(GeometrySet):
         >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
         >>> p1.axis_of_symmetry
         Line(Point2D(0, 0), Point2D(0, 8))
-        
+
         """
         return self.directrix.perpendicular_line(self.focus)
 
@@ -192,15 +194,15 @@ class Parabola(GeometrySet):
         >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
         >>> p1.focal_length
         4
-        
+
         """
         distance = self.directrix.distance(self.focus)
         focal_length = distance/2
-        
+
         return focal_length
 
     @property
-    def p_parameter (self):
+    def p_parameter(self):
         """P is a parameter of parabola.
 
         Returns
@@ -212,11 +214,11 @@ class Parabola(GeometrySet):
         ========
 
         >>> from sympy import Parabola, Point, Line
-        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))        
+        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
         >>> p1.p_parameter
-        -4 
-        
-        """       
+        -4
+
+        """
         if (self.axis_of_symmetry.slope == 0):
             x = -(self.directrix.coefficients[2])
             if (x < self.focus.args[0]):
@@ -231,7 +233,7 @@ class Parabola(GeometrySet):
                 p = self.focal_length
 
         return p
-            
+
     @property
     def vertex(self):
         """The vertex of the parabola.
@@ -252,16 +254,17 @@ class Parabola(GeometrySet):
         >>> from sympy import Parabola, Point, Line
         >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
         >>> p1.vertex
-        Point2D(0, 4)       
-        
+        Point2D(0, 4)
+
         """
+        focus = self.focus
         if (self.axis_of_symmetry.slope == 0):
-            vertex = Point(self.focus.args[0] - self.p_parameter, self.focus.args[1])
+            vertex = Point(focus.args[0] - self.p_parameter, focus.args[1])
         else:
-            vertex = Point(self.focus.args[0], self.focus.args[1] - self.p_parameter)
-                
+            vertex = Point(focus.args[0], focus.args[1] - self.p_parameter)
+
         return vertex
-        
+
     @property
     def eccentricity(self):
         """The eccentricity of the parabola.
@@ -275,15 +278,15 @@ class Parabola(GeometrySet):
         ========
 
         >>> from sympy import Parabola, Point, Line
-        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))        
+        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
         >>> p1.eccentricity
         1
 
         Notes
         -----
         The eccentricity for every Parabola is 1 by definition.
-        
-        """       
+
+        """
         return 1
 
     def equation(self, x='x', y='y'):
@@ -295,7 +298,7 @@ class Parabola(GeometrySet):
             Label for the x-axis. Default value is 'x'.
         y : str, optional
             Label for the y-axis. Default value is 'y'.
-            
+
         Returns
         =======
         equation : sympy expression
@@ -304,10 +307,10 @@ class Parabola(GeometrySet):
         ========
 
         >>> from sympy import Parabola, Point, Line
-        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))        
+        >>> p1 = Parabola(Point(0, 0), Line(Point(5, 8), Point(7, 8)))
         >>> p1.equation()
-        -x**2 - 16*y + 64      
-        
+        -x**2 - 16*y + 64
+
         """
         x = _symbol(x)
         y = _symbol(y)
@@ -318,5 +321,5 @@ class Parabola(GeometrySet):
         else:
             t1 = 4 * (self.p_parameter) * (y - self.vertex.y)
             t2 = (x - self.vertex.x)**2
-        
+
         return t1 - t2
