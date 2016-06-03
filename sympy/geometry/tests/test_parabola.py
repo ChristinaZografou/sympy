@@ -9,7 +9,6 @@ from sympy.integrals.integrals import Integral
 from sympy.utilities.pytest import raises, slow
 
 
-@slow
 def test_parabola_geom():
     p1 = Point(0, 0)
     p2 = Point(3, 7)
