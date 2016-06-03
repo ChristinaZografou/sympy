@@ -1,7 +1,7 @@
 from __future__ import division
 
 from sympy import Symbol, pi, symbols, Tuple, S
-from sympy.geometry import Curve, Line, Point, Ellipse, Ray, Segment, Circle, Polygon, RegularPolygon, Parabola
+from sympy.geometry import Curve, Line, Point, Ellipse, Ray, Segment, Circle, Polygon, RegularPolygon
 from sympy.utilities.pytest import raises
 
 
